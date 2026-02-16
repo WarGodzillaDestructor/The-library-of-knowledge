@@ -17,38 +17,14 @@ def codigo_qrSimple():
     img.save(ruta_final)
     print(f"QR guardado en {ruta_final} ✅")
 
-def red_existe(nombre_red):
-    try:
-        comando = ["/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport", "-s"]
-        resultado = subprocess.check_output(comando).decode()
 
-        return nombre_red in resultado
-
-    except Exception as e:
-        print(f"Error al buscar redes: {e}")
-        return False
-    
 def conectar_wifi(nombre_red, contrasena):
-    if not nombre_red.strip():
-        print("❌ El nombre de la red no puede estar vacío.")
-        return
-
-    if len(contrasena) < 8:
-        print("❌ La contraseña debe tener al menos 8 caracteres (WPA).")
-        return
-
-    if not red_existe(nombre_red):
-        print("❌ No se encontró esa red WiFi disponible.")
-        return
     datos_wifi = f"WIFI:S:{nombre_red};T:WPA;P:{contrasena};;"
-    os.makedirs(CARPETA, exist_ok=True)
+
     img2 = qrcode.make(datos_wifi)
     ruta_archivo_wifi = os.path.join(CARPETA, "wifi_qr.png")
-    try:
-        img2.save(ruta_archivo_wifi)
-        print(f"QR WiFi generado en: {ruta_archivo_wifi} 📶")
-    except Exception as e:
-        print(f"❌ Error al guardar el archivo: {e}")
+    img2.save(ruta_archivo_wifi)
+    print(f"QR WiFi generado en: {ruta_archivo_wifi} 📶")
 
 
 def generar_vcard_qr(nombre, celular, email):
